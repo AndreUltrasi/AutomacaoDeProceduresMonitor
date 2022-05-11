@@ -1,0 +1,60 @@
+﻿@using AutomacaoDeProceduresMonitor.Models
+@model ListProcedureClass
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+
+<div id="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>WorkItem</th>
+                <th>ChangesetId</th>
+                <th>Ambiente</th>
+                <th>DataModificacao</th>
+                <th>ChangesetStatus</th>
+                <th>NomeArquivo</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @{foreach (var procedureClass in Model.ProcedureClass) {
+                    @if ((ViewBag.ListItems).Contains(procedureClass.Guid)) {
+                        string status;
+                        @if (!procedureClass.NomeArquivo.ToLower().Contains("sproc")) {
+                            status = "info";
+                        } else if (procedureClass.ChangesetStatus == "Published" || procedureClass.ChangesetStatus == "Manually Solved") {
+                            status = "success";
+                        } else if (procedureClass.ChangesetStatus == "Pending") {
+                            status = "info";
+                        } else {
+                            status = "danger";
+                        }
+
+                        <tr class="@status">
+                            <td>
+                                @procedureClass.WorkItem
+                            </td>
+                            <td>
+                                @procedureClass.ChangesetId
+                            </td>
+                            <td>
+                                @procedureClass.Ambiente
+                            </td>
+                            <td>
+                                @procedureClass.DataModificacao
+                            </td>
+                            <td>
+                                @procedureClass.ChangesetStatus
+                            </td>
+                            <td>
+                                @procedureClass.NomeArquivo
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+    @Html.PagedListPager((IPagedList)ViewBag.OnePageOfSQLs, page => Url.Action("Index", new { page = page }))
+</div>

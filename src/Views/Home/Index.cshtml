@@ -1,0 +1,29 @@
+﻿@using AutomacaoDeProceduresMonitor.Models
+@model ListProcedureClass
+
+@{ViewBag.Title = "AutomacaoDeProceduresMonitor";}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        setInterval(ajaxCall, 5000);
+        
+        function ajaxCall() {
+            var pageNumber = "@Model.Page";
+            $.ajax({
+                type: 'POST',
+                url: 'Home/_ProcedureClassView',
+                data: { page: pageNumber },
+                success: function (data) {
+                    $("#container").html(data);
+                }, error: function (jqXHR, textStatus, errorThrown) {
+                    alert("jqXHR: " + jqXHR + "\ntextStatus:" + textStatus + "\nerrorThrown: " + errorThrown);
+                }
+            });
+        }
+    });
+</script>
+
+<div id="container" class="container">
+    @await Html.PartialAsync("_ProcedureClassView.cshtml")
+</div>
